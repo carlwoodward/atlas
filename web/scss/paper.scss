@@ -1,0 +1,10 @@
+.paper {
+  -webkit-transform: none;
+  -webkit-backface-visibility: hidden;
+  -webkit-transform-origin: 50% 50%;
+  cursor: move;
+  background: pink;
+  -webkit-transform: matrix(1, 0, 0, 1, 0, 0);
+  width: calc(5 * 100vw);
+  height: calc(5 * 100vh);
+}
