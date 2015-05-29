@@ -1,22 +1,32 @@
 var Paper = React.createClass({
+  componentDidMount: function() {
+    this.paperX = -5000;
+    this.paperY = -3000;
+  },
+
+  getInitialState: function() {
+    return { notes: [] };
+  },
+
   mouseDown: function(event) {
     this.isDragging = true;
+    this.hasDragged = false;
     this.clickX = event.pageX;
     this.clickY = event.pageY;
-    console.log('down');
   },
 
   mouseUp: function(event) {
     this.isDragging = false;
+    if (this.hasDragged !== true) { // click rather then drag
+      this.insertNote(event.pageX - this.paperX, event.pageY - this.paperY);
+    }
   },
 
   mouseMove: function(event) {
     if (this.isDragging) {
+      this.hasDragged = true;
       var dx = this.clickX - event.pageX;
       var dy = this.clickY - event.pageY;
-
-      if (this.paperX === undefined) this.paperX = -5000;
-      if (this.paperY === undefined) this.paperY = -3000;
 
       this.paperX = Math.abs((this.paperX) - dx);
       this.paperX = Math.min(10000 - document.body.offsetWidth,
@@ -35,13 +45,22 @@ var Paper = React.createClass({
     }
   },
 
+  insertNote: function(x, y) {
+    var matrix = 'matrix(1, 0, 0, 1, ' + x + ', ' + y + ')';
+    this.setState({ notes: this.state.notes.concat([{ matrix: matrix }]) });
+  },
+
   render: function() {
     return (
       <div className="paper"
         onMouseDown={this.mouseDown}
         onMouseUp={this.mouseUp}
         onMouseMove={this.mouseMove}>
-        <h1>Hello</h1>
+        {
+          this.state.notes.map(function(note) {
+            return <div className="note" style={{transform: note.matrix}}>Hello</div>;
+          })
+        }
       </div>
     );
   }
