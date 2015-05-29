@@ -29,12 +29,13 @@ var Note = React.createClass({
         </textarea>
       );
     } else {
+      var val = this.state.content;
       return (
         <div className="note"
           style={{transform: this.props.matrix}}
           onMouseDown={this.mouseDown}
-          onMouseUp={this.mouseUp}>
-          {this.state.content}
+          onMouseUp={this.mouseUp}
+          dangerouslySetInnerHTML={{__html: marked(val, { sanitize: true })}}>
         </div>
       );
     }
