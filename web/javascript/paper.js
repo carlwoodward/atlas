@@ -28,7 +28,10 @@ var Paper = React.createClass({
 
   render: function() {
     return (
-      <div className="paper" onMouseDown={this.mouseDown} onMouseUp={this.mouseUp} onMouseMove={this.mouseMove}>
+      <div className="paper"
+        onMouseDown={this.mouseDown}
+        onMouseUp={this.mouseUp}
+        onMouseMove={this.mouseMove}>
         <h1>Hello</h1>
       </div>
     );
