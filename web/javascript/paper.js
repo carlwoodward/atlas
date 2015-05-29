@@ -14,8 +14,17 @@ var Paper = React.createClass({
     if (this.isDragging) {
       var dx = this.clickX - event.pageX;
       var dy = this.clickY - event.pageY;
-      this.paperX = (this.paperX || -5000) - dx;
-      this.paperY = (this.paperY || -3000) - dy;
+
+      if (this.paperX === undefined) this.paperX = -5000;
+      if (this.paperY === undefined) this.paperY = -3000;
+
+      this.paperX = Math.abs((this.paperX) - dx);
+      this.paperX = Math.min(10000 - document.body.offsetWidth,
+          Math.max(0, this.paperX)) * -1;
+      this.paperY = Math.abs((this.paperY) - dy);
+      this.paperY = Math.min(6000 - document.body.offsetHeight,
+          Math.max(0, this.paperY)) * -1;
+
       var paper = document.querySelector('.paper');
       var matrix = 'matrix(1, 0, 0, 1, ' + this.paperX.toFixed() + ', ' +
           this.paperY.toFixed()  + ')';
