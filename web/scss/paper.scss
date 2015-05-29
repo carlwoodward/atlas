@@ -3,8 +3,12 @@
   -webkit-backface-visibility: hidden;
   -webkit-transform-origin: 50% 50%;
   cursor: move;
-  background: pink;
-  -webkit-transform: matrix(1, 0, 0, 1, 0, 0);
-  width: calc(5 * 100vw);
-  height: calc(5 * 100vh);
+  background: url(/images/bg-cloth.jpg);
+  transform: matrix(1, 0, 0, 1, -5000, -3000);
+  width: 10000px;
+  height: 6000px;
+
+  h1 {
+    margin: 0;
+  }
 }
