@@ -47,7 +47,9 @@ var Paper = React.createClass({
 
   insertNote: function(x, y) {
     var matrix = 'matrix(1, 0, 0, 1, ' + x + ', ' + y + ')';
-    this.setState({ notes: this.state.notes.concat([{ matrix: matrix }]) });
+    var notesCount = this.state.notes.length;
+    var attrs = { matrix: matrix, key: notesCount };
+    this.setState({ notes: this.state.notes.concat([attrs]) });
   },
 
   render: function() {
@@ -58,7 +60,9 @@ var Paper = React.createClass({
         onMouseMove={this.mouseMove}>
         {
           this.state.notes.map(function(note) {
-            return <div className="note" style={{transform: note.matrix}}>Hello</div>;
+            return <Note className="note"
+              key={note.key}
+              matrix={note.matrix}>Hello</Note>
           })
         }
       </div>
