@@ -52,7 +52,7 @@ var Paper = React.createClass({
   },
 
   insertNote: function(x, y) {
-    var matrix = 'matrix(' + this.zoom + ', 0, 0, ' + this.zoom + ', ' + x + ', ' + y + ')';
+    var matrix = 'matrix(1, 0, 0, 1, ' + x + ', ' + y + ')';
     var notesCount = this.state.notes.length;
     var attrs = { matrix: matrix, key: notesCount };
     this.setState({ notes: this.state.notes.concat([attrs]) });
