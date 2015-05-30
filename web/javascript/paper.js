@@ -42,13 +42,18 @@ var Paper = React.createClass({
       this.paperY = Math.min(6000 - document.body.offsetHeight,
           Math.max(0, this.paperY)) * -1;
 
-      var matrix = 'matrix(' + this.zoom + ', 0, 0, ' + this.zoom + ', ' + this.paperX.toFixed() + ', ' +
-          this.paperY.toFixed()  + ')';
-      this.setState({ matrix: matrix });
+      this.updateMatrixState();
 
       this.clickX = event.pageX;
       this.clickY = event.pageY;
     }
+  },
+
+  updateMatrixState: function() {
+    var matrix = 'matrix(' + this.zoom + ', 0, 0, ' + this.zoom + ', ' +
+        this.paperX.toFixed() + ', ' +
+        this.paperY.toFixed()  + ')';
+    this.setState({ matrix: matrix });
   },
 
   insertNote: function(x, y) {
@@ -59,15 +64,13 @@ var Paper = React.createClass({
   },
 
   zoomUp: function() {
-    this.zoom += 0.25
-    var matrix = 'matrix(' + this.zoom + ', 0, 0, ' + this.zoom + ', ' + this.paperX.toFixed() + ', ' + this.paperY.toFixed()  + ')';
-    this.setState({ matrix: matrix });
+    this.zoom += 0.25;
+    this.updateMatrixState();
   },
 
   zoomDown: function() {
-    this.zoom -= 0.25
-    var matrix = 'matrix(' + this.zoom + ', 0, 0, ' + this.zoom + ', ' + this.paperX.toFixed() + ', ' + this.paperY.toFixed()  + ')';
-    this.setState({ matrix: matrix });
+    this.zoom -= 0.25;
+    this.updateMatrixState();
   },
 
   render: function() {
