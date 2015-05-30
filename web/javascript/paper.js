@@ -2,10 +2,17 @@ var Paper = React.createClass({
   componentDidMount: function() {
     this.paperX = -5000;
     this.paperY = -3000;
+    this.zoom = 1;
   },
 
   getInitialState: function() {
-    return { notes: [] };
+    this.paperX = -5000;
+    this.paperY = -3000;
+    this.zoom = 1;
+
+    var matrix = 'matrix(' + this.zoom + ', 0, 0, ' + this.zoom + ', ' + this.paperX.toFixed() + ', ' +
+          this.paperY.toFixed()  + ')';
+    return { notes: [], matrix: matrix };
   },
 
   mouseDown: function(event) {
@@ -35,10 +42,9 @@ var Paper = React.createClass({
       this.paperY = Math.min(6000 - document.body.offsetHeight,
           Math.max(0, this.paperY)) * -1;
 
-      var paper = document.querySelector('.paper');
-      var matrix = 'matrix(1, 0, 0, 1, ' + this.paperX.toFixed() + ', ' +
+      var matrix = 'matrix(' + this.zoom + ', 0, 0, ' + this.zoom + ', ' + this.paperX.toFixed() + ', ' +
           this.paperY.toFixed()  + ')';
-      paper.style.webkitTransform = matrix;
+      this.setState({ matrix: matrix });
 
       this.clickX = event.pageX;
       this.clickY = event.pageY;
@@ -46,25 +52,45 @@ var Paper = React.createClass({
   },
 
   insertNote: function(x, y) {
-    var matrix = 'matrix(1, 0, 0, 1, ' + x + ', ' + y + ')';
+    var matrix = 'matrix(' + this.zoom + ', 0, 0, ' + this.zoom + ', ' + x + ', ' + y + ')';
     var notesCount = this.state.notes.length;
     var attrs = { matrix: matrix, key: notesCount };
     this.setState({ notes: this.state.notes.concat([attrs]) });
   },
 
+  zoomUp: function() {
+    this.zoom += 0.25
+    var matrix = 'matrix(' + this.zoom + ', 0, 0, ' + this.zoom + ', ' + this.paperX.toFixed() + ', ' + this.paperY.toFixed()  + ')';
+    this.setState({ matrix: matrix });
+  },
+
+  zoomDown: function() {
+    this.zoom -= 0.25
+    var matrix = 'matrix(' + this.zoom + ', 0, 0, ' + this.zoom + ', ' + this.paperX.toFixed() + ', ' + this.paperY.toFixed()  + ')';
+    this.setState({ matrix: matrix });
+  },
+
   render: function() {
     return (
-      <div className="paper"
-        onMouseDown={this.mouseDown}
-        onMouseUp={this.mouseUp}
-        onMouseMove={this.mouseMove}>
-        {
-          this.state.notes.map(function(note) {
-            return <Note className="note"
-              key={note.key}
-              matrix={note.matrix}>Hello</Note>
-          })
-        }
+      <div>
+        <div className="paper"
+          onMouseDown={this.mouseDown}
+          onMouseUp={this.mouseUp}
+          onMouseMove={this.mouseMove}
+          style={{transform: this.state.matrix}}>
+          {
+            this.state.notes.map(function(note) {
+              return <Note className="note"
+                key={note.key}
+                matrix={note.matrix}>Hello</Note>
+            })
+          }
+        </div>
+        <div className="zoom-control">
+          <a onClick={this.zoomUp}>Zoom Up</a>
+          <br/>
+          <a onClick={this.zoomDown}>Zoom Down</a>
+        </div>
       </div>
     );
   }
