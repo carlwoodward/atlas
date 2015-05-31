@@ -65,11 +65,23 @@ var Paper = React.createClass({
 
   zoomUp: function() {
     this.zoom += 0.25;
+    var bodyWidth = document.body.offsetWidth;
+    var bodyHeight = document.body.offsetHeight;
+    var adjustX = bodyWidth * (0.25) / 2;
+    var adjustY = bodyHeight * (0.25) / 2;
+    this.paperX = this.paperX - adjustX;
+    this.paperY = this.paperY - adjustY;
     this.updateMatrixState();
   },
 
   zoomDown: function() {
     this.zoom -= 0.25;
+    var bodyWidth = document.body.offsetWidth;
+    var bodyHeight = document.body.offsetHeight;
+    var adjustX = bodyWidth * (-0.25) / 2;
+    var adjustY = bodyHeight * (-0.25) / 2;
+    this.paperX = this.paperX - adjustX;
+    this.paperY = this.paperY - adjustY;
     this.updateMatrixState();
   },
 
