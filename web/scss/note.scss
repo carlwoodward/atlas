@@ -1,4 +1,15 @@
 .note {
   position: absolute;
   transform-origin: 0% 0%;
+  width: 500px;
+
+  *:first-child {
+    margin-top: 0;
+    padding-top: 0;
+  }
+}
+
+textarea.note {
+  font-size: 14pt;
+  min-height: 200px;
 }

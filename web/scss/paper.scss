@@ -3,8 +3,8 @@
   -webkit-backface-visibility: hidden;
   -webkit-transform-origin: 50% 50%;
   cursor: move;
-  background: url(/images/bg-cloth.jpg);
-  transform: matrix(1, 0, 0, 1, -5000, -3000);
+  background: url(/images/bg.png);
+  background-size: 384px 512px;
   width: 10000px;
   height: 6000px;
   transform-origin: 0% 0%;
