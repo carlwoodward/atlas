@@ -1,17 +1,18 @@
 var Paper = React.createClass({
+  width: 10000,
+  height: 6000,
+
   componentDidMount: function() {
-    this.paperX = -5000;
-    this.paperY = -3000;
-    this.zoom = 1;
   },
 
   getInitialState: function() {
-    this.paperX = -5000;
-    this.paperY = -3000;
+    this.paperX = this.width / -2;
+    this.paperY = this.height / -2;
     this.zoom = 1;
+    this.zoomAmount = 0.1;
 
-    var matrix = 'matrix(' + this.zoom + ', 0, 0, ' + this.zoom + ', ' + this.paperX.toFixed() + ', ' +
-          this.paperY.toFixed()  + ')';
+    var matrix = 'scale(' + this.zoom + ') translate(' + this.paperX.toFixed() + 'px, ' +
+          this.paperY.toFixed()  + 'px)';
     return { notes: [], matrix: matrix };
   },
 
@@ -25,7 +26,9 @@ var Paper = React.createClass({
   mouseUp: function(event) {
     this.isDragging = false;
     if (this.hasDragged !== true) { // click rather then drag
-      this.insertNote(event.pageX - this.paperX, event.pageY - this.paperY);
+      var differenceToOne = Math.abs(1 - this.zoom);
+      this.insertNote((event.clientX / this.zoom) + Math.abs(this.paperX),
+                      (event.clientY / this.zoom) + Math.abs(this.paperY));
     }
   },
 
@@ -36,10 +39,10 @@ var Paper = React.createClass({
       var dy = this.clickY - event.pageY;
 
       this.paperX = Math.abs((this.paperX) - dx);
-      this.paperX = Math.min(10000 - document.body.offsetWidth,
+      this.paperX = Math.min(this.width - document.body.offsetWidth,
           Math.max(0, this.paperX)) * -1;
       this.paperY = Math.abs((this.paperY) - dy);
-      this.paperY = Math.min(6000 - document.body.offsetHeight,
+      this.paperY = Math.min(this.height - document.body.offsetHeight,
           Math.max(0, this.paperY)) * -1;
 
       this.updateMatrixState();
@@ -50,38 +53,26 @@ var Paper = React.createClass({
   },
 
   updateMatrixState: function() {
-    var matrix = 'matrix(' + this.zoom + ', 0, 0, ' + this.zoom + ', ' +
-        this.paperX.toFixed() + ', ' +
-        this.paperY.toFixed()  + ')';
+    var matrix = 'scale(' + this.zoom + ') translate(' +
+        this.paperX.toFixed() + 'px, ' +
+        this.paperY.toFixed()  + 'px)';
     this.setState({ matrix: matrix });
   },
 
   insertNote: function(x, y) {
-    var matrix = 'matrix(1, 0, 0, 1, ' + x + ', ' + y + ')';
+    var matrix = 'translate(' + x + 'px, ' + y + 'px)';
     var notesCount = this.state.notes.length;
     var attrs = { matrix: matrix, key: notesCount };
     this.setState({ notes: this.state.notes.concat([attrs]) });
   },
 
   zoomUp: function() {
-    this.zoom += 0.25;
-    var bodyWidth = document.body.offsetWidth;
-    var bodyHeight = document.body.offsetHeight;
-    var adjustX = bodyWidth * (0.25) / 2;
-    var adjustY = bodyHeight * (0.25) / 2;
-    this.paperX = this.paperX - adjustX;
-    this.paperY = this.paperY - adjustY;
+    this.zoom += this.zoomAmount;
     this.updateMatrixState();
   },
 
   zoomDown: function() {
-    this.zoom -= 0.25;
-    var bodyWidth = document.body.offsetWidth;
-    var bodyHeight = document.body.offsetHeight;
-    var adjustX = bodyWidth * (-0.25) / 2;
-    var adjustY = bodyHeight * (-0.25) / 2;
-    this.paperX = this.paperX - adjustX;
-    this.paperY = this.paperY - adjustY;
+    this.zoom -= this.zoomAmount;
     this.updateMatrixState();
   },
 
