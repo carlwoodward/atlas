@@ -1,7 +1,7 @@
 .note {
   position: absolute;
   transform-origin: 0% 0%;
-  width: 500px;
+  width: 400px;
 
   *:first-child {
     margin-top: 0;
@@ -10,6 +10,8 @@
 }
 
 textarea.note {
-  font-size: 14pt;
+  background: rgba(248, 248, 248, 0.7);
+  font-size: 16px;
   min-height: 200px;
+  outline: none;
 }

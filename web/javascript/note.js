@@ -11,6 +11,7 @@ var Note = React.createClass({
   mouseDown: function(event) {
     event.stopPropagation();
     this.setState({ isEditing: true });
+    this.change();
   },
 
   mouseUp: function(event) {
@@ -26,6 +27,12 @@ var Note = React.createClass({
     EventBus.emitEvent('update-note', [currentState]);
   },
 
+  change: function() {
+    var node = this.getDOMNode();
+    node.style.height = 'auto';
+    node.style.height = node.scrollHeight + 'px';
+  },
+
   render: function() {
     if (this.state.isEditing) {
       return (
@@ -33,7 +40,8 @@ var Note = React.createClass({
           style={{transform: this.props.matrix}}
           onMouseDown={this.mouseDown}
           onMouseUp={this.mouseUp}
-          onBlur={this.blur}>
+          onBlur={this.blur}
+          onChange={this.change}>
           {this.state.content}
         </textarea>
       );
