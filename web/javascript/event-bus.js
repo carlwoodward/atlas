@@ -1,8 +1,16 @@
 (function() {
   window.EventBus = new EventEmitter();
 
-  var notesKey = 'notes';
-  var fetchNotes = function() {
+  var map = (window.location.hash || 'carlwoodward').replace('#', '');
+  var notesKey = map + '-notes';
+
+  window.onhashchange = function() {
+    map = (window.location.hash || 'carlwoodward').replace('#', '');
+    notesKey = map + '-notes';
+    EventBus.emitEvent('reload');
+  };
+
+  window.fetchNotes = function() {
     return JSON.parse(localStorage.getItem(notesKey)) || [];
   };
 
