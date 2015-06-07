@@ -3,6 +3,11 @@ var Paper = React.createClass({
   height: 6000,
 
   componentDidMount: function() {
+    var reload = function() {
+      this.setState({ notes: [] });
+      this.setState({ notes: fetchNotes() });
+    }.bind(this);
+    EventBus.addListener('reload', reload);
   },
 
   getInitialState: function() {
@@ -14,7 +19,7 @@ var Paper = React.createClass({
     var matrix = 'scale(' + this.zoom + ') translate(' +
         this.paperX.toFixed() + 'px, ' + this.paperY.toFixed()  + 'px)';
 
-    var notes = JSON.parse(localStorage.getItem('notes')) || [];
+    var notes = fetchNotes();
     return { notes: notes, matrix: matrix };
   },
 
