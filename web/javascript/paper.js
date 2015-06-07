@@ -110,9 +110,9 @@ var Paper = React.createClass({
           }
         </div>
         <div className="zoom-control">
-          <a onClick={this.zoomUp}>Zoom Up</a>
-          <br/>
-          <a onClick={this.zoomDown}>Zoom Down</a>
+          <a onClick={this.zoomUp}>+</a>
+          <hr />
+          <a onClick={this.zoomDown}>&ndash;</a>
         </div>
       </div>
     );
