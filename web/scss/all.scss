@@ -14,6 +14,10 @@ main {
   position: relative;
 }
 
+input, textarea {
+  font-family: 'Roboto', sans-serif;
+}
+
 @import 'paper';
 @import 'note';
 @import 'search-box';
