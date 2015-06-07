@@ -4,29 +4,47 @@ var SearchBox = React.createClass({
   },
 
   clear: function() {
-    this.setState({ maps: [] });
+    this.setState({ maps: [], query: '' });
     React.findDOMNode(this.refs.query).value = '';
   },
 
   getInitialState: function() {
-    return { maps: [] };
+    return { maps: [], query: '' };
+  },
+
+  fetchQuery: function() {
+    if (React.findDOMNode(this.refs.query)) {
+      var query = React.findDOMNode(this.refs.query)
+        .value
+        .replace(/\s|\W/g, '-');;
+      return query;
+    } else {
+      return '';
+    }
   },
 
   submit: function(event) {
     event.preventDefault();
-    var query = React.findDOMNode(this.refs.query).value;
+    var query = this.fetchQuery();
     if (query.trim() === '') {
-      this.setState({ maps: [] });
+      this.setState({ maps: [], query: query });
     } else {
       var maps = fetchMaps().filter(function(map) {
         return map.toLowerCase().trim().indexOf(
             query.toLowerCase().trim()) === 0;
       });
-      this.setState({ maps: maps });
+      this.setState({ maps: maps, query: query });
     }
   },
 
   render: function() {
+    var addButton;
+    if (this.state.query.length > 0) {
+      addButton = <p>
+        <a href={'#' + this.fetchQuery()}>Create {this.fetchQuery()}</a>
+      </p>;
+    }
+
     return (
       <form className="search-box" onSubmit={this.submit}>
         <div className="entry">
@@ -41,6 +59,7 @@ var SearchBox = React.createClass({
               return <p><a href={'#' + map}>{map}</a></p>
             })
           }
+          {addButton}
         </div>
       </form>
     );
