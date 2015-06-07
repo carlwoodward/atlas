@@ -3,11 +3,12 @@ var Paper = React.createClass({
   height: 6000,
 
   componentDidMount: function() {
-    var reload = function() {
-      this.setState({ notes: [] });
-      this.setState({ notes: fetchNotes() });
-    }.bind(this);
-    EventBus.addListener('reload', reload);
+    EventBus.addListener('reload', this.reload);
+  },
+
+  reload: function() {
+    this.setState({ notes: [] });
+    this.setState({ notes: fetchNotes() });
   },
 
   getInitialState: function() {
@@ -109,10 +110,11 @@ var Paper = React.createClass({
             })
           }
         </div>
+        <SearchBox></SearchBox>
         <div className="zoom-control">
-          <a onClick={this.zoomUp}>Zoom Up</a>
-          <br/>
-          <a onClick={this.zoomDown}>Zoom Down</a>
+          <a onClick={this.zoomUp}>+</a>
+          <hr />
+          <a onClick={this.zoomDown}>&ndash;</a>
         </div>
       </div>
     );

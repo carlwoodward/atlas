@@ -1,12 +1,29 @@
 (function() {
   window.EventBus = new EventEmitter();
 
+  var mapsKey = 'maps';
+
+  window.fetchMaps = function() {
+    return JSON.parse(localStorage.getItem(mapsKey)).sort() || [];
+  };
+
+  var storeMap = function(name) {
+    var maps = fetchMaps();
+    if (maps.indexOf(name) === -1) {
+      maps.push(name);
+      localStorage.setItem(mapsKey, JSON.stringify(maps));
+    }
+  };
+
   var map = (window.location.hash || 'carlwoodward').replace('#', '');
   var notesKey = map + '-notes';
+  storeMap(map);
 
-  window.onhashchange = function() {
+  window.onhashchange = function(event) {
+    event.preventDefault();
     map = (window.location.hash || 'carlwoodward').replace('#', '');
     notesKey = map + '-notes';
+    storeMap(map);
     EventBus.emitEvent('reload');
   };
 
