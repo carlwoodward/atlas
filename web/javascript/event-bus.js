@@ -19,7 +19,8 @@
   var notesKey = map + '-notes';
   storeMap(map);
 
-  window.onhashchange = function() {
+  window.onhashchange = function(event) {
+    event.preventDefault();
     map = (window.location.hash || 'carlwoodward').replace('#', '');
     notesKey = map + '-notes';
     storeMap(map);
