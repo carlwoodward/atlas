@@ -3,8 +3,8 @@
 
   var mapsKey = 'maps';
 
-  var fetchMaps = function() {
-    return JSON.parse(localStorage.getItem(mapsKey)) || [];
+  window.fetchMaps = function() {
+    return JSON.parse(localStorage.getItem(mapsKey)).sort() || [];
   };
 
   var storeMap = function(name) {
