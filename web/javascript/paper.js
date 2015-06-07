@@ -109,6 +109,7 @@ var Paper = React.createClass({
             })
           }
         </div>
+        <SearchBox></SearchBox>
         <div className="zoom-control">
           <a onClick={this.zoomUp}>+</a>
           <hr />

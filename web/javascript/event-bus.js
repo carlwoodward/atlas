@@ -1,12 +1,28 @@
 (function() {
   window.EventBus = new EventEmitter();
 
+  var mapsKey = 'maps';
+
+  var fetchMaps = function() {
+    return JSON.parse(localStorage.getItem(mapsKey)) || [];
+  };
+
+  var storeMap = function(name) {
+    var maps = fetchMaps();
+    if (maps.indexOf(name) === -1) {
+      maps.push(name);
+      localStorage.setItem(mapsKey, JSON.stringify(maps));
+    }
+  };
+
   var map = (window.location.hash || 'carlwoodward').replace('#', '');
   var notesKey = map + '-notes';
+  storeMap(map);
 
   window.onhashchange = function() {
     map = (window.location.hash || 'carlwoodward').replace('#', '');
     notesKey = map + '-notes';
+    storeMap(map);
     EventBus.emitEvent('reload');
   };
 
