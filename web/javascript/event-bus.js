@@ -35,7 +35,6 @@
     var notes = fetchNotes();
     notes.push(note);
     localStorage.setItem(notesKey, JSON.stringify(notes));
-    return true;
   });
 
   EventBus.addListener('update-note', function(changedNote) {
@@ -48,6 +47,5 @@
       }
     });
     localStorage.setItem(notesKey, JSON.stringify(notes));
-    return true;
   });
 })();
