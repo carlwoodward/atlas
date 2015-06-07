@@ -11,9 +11,11 @@ var Paper = React.createClass({
     this.zoom = 1;
     this.zoomAmount = 0.1;
 
-    var matrix = 'scale(' + this.zoom + ') translate(' + this.paperX.toFixed() + 'px, ' +
-          this.paperY.toFixed()  + 'px)';
-    return { notes: [], matrix: matrix };
+    var matrix = 'scale(' + this.zoom + ') translate(' +
+        this.paperX.toFixed() + 'px, ' + this.paperY.toFixed()  + 'px)';
+
+    var notes = JSON.parse(localStorage.getItem('notes')) || [];
+    return { notes: notes, matrix: matrix };
   },
 
   mouseDown: function(event) {
@@ -62,8 +64,15 @@ var Paper = React.createClass({
   insertNote: function(x, y) {
     var matrix = 'translate(' + x + 'px, ' + y + 'px)';
     var notesCount = this.state.notes.length;
-    var attrs = { matrix: matrix, key: notesCount };
+    var attrs = {
+      matrix: matrix,
+      id: notesCount,
+      key: notesCount,
+      isEditing: true,
+      content: ''
+    };
     this.setState({ notes: this.state.notes.concat([attrs]) });
+    EventBus.emitEvent('create-note', [attrs]);
   },
 
   zoomUp: function() {
@@ -88,7 +97,10 @@ var Paper = React.createClass({
             this.state.notes.map(function(note) {
               return <Note className="note"
                 key={note.key}
-                matrix={note.matrix}>Hello</Note>
+                id={note.id}
+                isEditing={note.isEditing}
+                matrix={note.matrix}
+                content={note.content}></Note>
             })
           }
         </div>
