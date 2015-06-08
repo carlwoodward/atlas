@@ -4,6 +4,16 @@ var Paper = React.createClass({
 
   componentDidMount: function() {
     EventBus.addListener('reload', this.reload);
+    EventBus.addListener('edit-note', this.beginEditing);
+    EventBus.addListener('update-note', this.endEditing);
+  },
+
+  beginEditing: function() {
+    this.isEditing = true;
+  },
+
+  endEditing: function() {
+    this.isEditing = false;
   },
 
   reload: function() {
@@ -33,10 +43,13 @@ var Paper = React.createClass({
 
   mouseUp: function(event) {
     this.isDragging = false;
-    if (this.hasDragged !== true) { // click rather then drag
+    // click rather then drag
+    if (this.hasDragged !== true && this.isEditing !== true) {
       var differenceToOne = Math.abs(1 - this.zoom);
       this.insertNote((event.clientX / this.zoom) + Math.abs(this.paperX),
                       (event.clientY / this.zoom) + Math.abs(this.paperY));
+    } else if (this.isEditing === true) {
+      EventBus.emitEvent('stop-editing-note');
     }
   },
 
