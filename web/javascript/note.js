@@ -9,19 +9,49 @@ var Note = React.createClass({
       isEditing: this.props.isEditing,
       content: this.props.content,
       matrix: this.props.matrix,
+      x: this.props.x,
+      y: this.props.y,
       id: this.props.id
     };
   },
 
   mouseDown: function(event) {
     event.stopPropagation();
+    this.isDragging = true;
+    this.hasDragged = false;
+    this.clickX = event.pageX;
+    this.clickY = event.pageY;
   },
 
   mouseUp: function(event) {
     event.stopPropagation();
+    this.isDragging = false;
     this.setState({ isEditing: true });
     EventBus.emitEvent('edit-note', [this.state.id]);
     this.change();
+  },
+
+  mouseMove: function(event) {
+    if (this.isDragging) {
+      this.hasDragged = true;
+
+      var dx = this.clickX - event.pageX;
+      var dy = this.clickY - event.pageY;
+
+      this.setState({ x: this.state.x - dx, y: this.state.y - dy });
+
+      this.updateMatrixState();
+
+      this.clickX = event.pageX;
+      this.clickY = event.pageY;
+    }
+  },
+
+  updateMatrixState: function() {
+    var matrix = 'translate(' +
+        this.state.x.toFixed() + 'px, ' +
+        this.state.y.toFixed()  + 'px)';
+    this.setState({ matrix: matrix });
   },
 
   stopEditing: function() {
@@ -65,9 +95,10 @@ var Note = React.createClass({
     if (this.state.isEditing) {
       return (
         <textarea className="note"
-          style={{transform: this.props.matrix}}
+          style={{transform: this.state.matrix}}
           onMouseDown={this.mouseDown}
           onMouseUp={this.mouseUp}
+          onMouseMove={this.mouseMove}
           onBlur={this.blur}
           onChange={this.change}
           onKeyUp={this.keyUp}>
@@ -78,7 +109,7 @@ var Note = React.createClass({
       var val = this.state.content;
       return (
         <div className="note"
-          style={{transform: this.props.matrix}}
+          style={{transform: this.state.matrix}}
           onMouseDown={this.mouseDown}
           onMouseUp={this.mouseUp}
           dangerouslySetInnerHTML={{__html: marked(val, { sanitize: true })}}>

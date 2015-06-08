@@ -96,6 +96,8 @@ var Paper = React.createClass({
       id: notesCount,
       key: notesCount,
       isEditing: true,
+      x: x,
+      y: y,
       content: ''
     };
     this.setState({ notes: this.state.notes.concat([attrs]) });
@@ -127,6 +129,8 @@ var Paper = React.createClass({
                 id={note.id}
                 isEditing={note.isEditing}
                 matrix={note.matrix}
+                x={note.x}
+                y={note.y}
                 content={note.content}></Note>
             })
           }
