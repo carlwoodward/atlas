@@ -4,17 +4,7 @@ var Paper = React.createClass({
 
   componentDidMount: function() {
     EventBus.addListener('reload', this.reload);
-    EventBus.addListener('edit-note', this.beginEditing);
-    EventBus.addListener('update-note', this.endEditing);
     EventBus.addListener('delete-note', this.deleteNote);
-  },
-
-  beginEditing: function() {
-    this.isEditing = true;
-  },
-
-  endEditing: function() {
-    this.isEditing = false;
   },
 
   reload: function() {

@@ -1,7 +1,5 @@
 var Note = React.createClass({
   componentDidMount: function() {
-    EventBus.addListener('stop-editing-note', this.stopEditing);
-    EventBus.addListener('edit-note', this.stopEditingUnlessSelf);
   },
 
   getInitialState: function() {
@@ -52,18 +50,6 @@ var Note = React.createClass({
         this.state.x.toFixed() + 'px, ' +
         this.state.y.toFixed()  + 'px)';
     this.setState({ matrix: matrix });
-  },
-
-  stopEditing: function() {
-    if (this.state.isEditing === true) {
-      this.blur();
-    }
-  },
-
-  stopEditingUnlessSelf: function(id) {
-    if (this.state.id !== id) {
-      this.stopEditing();
-    }
   },
 
   blur: function() {
