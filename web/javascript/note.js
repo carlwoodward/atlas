@@ -18,6 +18,7 @@ var Note = React.createClass({
     this.setState({ isEditing: true });
     this.change();
     EventBus.emitEvent('edit-note', [this.state.id]);
+    setTimeout(function() { this.getDOMNode().focus(); }.bind(this), 100);
   },
 
   mouseUp: function(event) {
