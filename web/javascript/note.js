@@ -15,19 +15,13 @@ var Note = React.createClass({
 
   mouseDown: function(event) {
     event.stopPropagation();
-    this.setState({ isEditing: true });
-    this.change();
-    EventBus.emitEvent('edit-note', [this.state.id]);
-    setTimeout(function() {
-      var value = this.getDOMNode().value;
-      this.getDOMNode().focus();
-      this.getDOMNode().value = '';
-      this.getDOMNode().value = value;
-    }.bind(this), 100);
   },
 
   mouseUp: function(event) {
     event.stopPropagation();
+    this.setState({ isEditing: true });
+    EventBus.emitEvent('edit-note', [this.state.id]);
+    this.change();
   },
 
   stopEditing: function() {
