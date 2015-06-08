@@ -1,4 +1,9 @@
 var Note = React.createClass({
+  componentDidMount: function() {
+    EventBus.addListener('stop-editing-note', this.stopEditing);
+    EventBus.addListener('edit-note', this.stopEditingUnlessSelf);
+  },
+
   getInitialState: function() {
     return {
       isEditing: this.props.isEditing,
@@ -12,13 +17,26 @@ var Note = React.createClass({
     event.stopPropagation();
     this.setState({ isEditing: true });
     this.change();
+    EventBus.emitEvent('edit-note', [this.state.id]);
   },
 
   mouseUp: function(event) {
     event.stopPropagation();
   },
 
-  blur: function(event) {
+  stopEditing: function() {
+    if (this.state.isEditing === true) {
+      this.blur();
+    }
+  },
+
+  stopEditingUnlessSelf: function(id) {
+    if (this.state.id !== id) {
+      this.stopEditing();
+    }
+  },
+
+  blur: function() {
     var content = this.getDOMNode().value;
     var attrs = { isEditing: false, content: content };
     this.setState(attrs);
