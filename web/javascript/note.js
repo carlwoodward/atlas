@@ -55,6 +55,12 @@ var Note = React.createClass({
     node.style.height = node.scrollHeight + 'px';
   },
 
+  keyUp: function(event) {
+    if (event.keyCode === 27) {
+      this.blur();
+    }
+  },
+
   render: function() {
     if (this.state.isEditing) {
       return (
@@ -63,7 +69,8 @@ var Note = React.createClass({
           onMouseDown={this.mouseDown}
           onMouseUp={this.mouseUp}
           onBlur={this.blur}
-          onChange={this.change}>
+          onChange={this.change}
+          onKeyUp={this.keyUp}>
           {this.state.content}
         </textarea>
       );
