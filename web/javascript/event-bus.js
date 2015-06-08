@@ -48,4 +48,11 @@
     });
     localStorage.setItem(notesKey, JSON.stringify(notes));
   });
+
+  EventBus.addListener('delete-note', function(id) {
+    var notes = fetchNotes().filter(function(note) {
+      return note.id !== id;
+    });
+    localStorage.setItem(notesKey, JSON.stringify(notes));
+  });
 })();

@@ -38,11 +38,15 @@ var Note = React.createClass({
 
   blur: function() {
     var content = this.getDOMNode().value;
-    var attrs = { isEditing: false, content: content };
-    this.setState(attrs);
-    var currentState = this.state;
-    for (var key in attrs) { currentState[key] = attrs[key]; }
-    EventBus.emitEvent('update-note', [currentState]);
+    if (content === '') {
+      EventBus.emitEvent('delete-note', [this.state.id]);
+    } else {
+      var attrs = { isEditing: false, content: content };
+      this.setState(attrs);
+      var currentState = this.state;
+      for (var key in attrs) { currentState[key] = attrs[key]; }
+      EventBus.emitEvent('update-note', [currentState]);
+    }
   },
 
   change: function() {

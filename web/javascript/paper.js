@@ -6,6 +6,7 @@ var Paper = React.createClass({
     EventBus.addListener('reload', this.reload);
     EventBus.addListener('edit-note', this.beginEditing);
     EventBus.addListener('update-note', this.endEditing);
+    EventBus.addListener('delete-note', this.deleteNote);
   },
 
   beginEditing: function() {
@@ -32,6 +33,13 @@ var Paper = React.createClass({
 
     var notes = fetchNotes();
     return { notes: notes, matrix: matrix };
+  },
+
+  deleteNote: function(id) {
+    var notes = fetchNotes().filter(function(note) {
+      return note.id !== id;
+    });
+    this.setState({ notes: notes });
   },
 
   mouseDown: function(event) {
