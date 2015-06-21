@@ -81,7 +81,7 @@ var Note = React.createClass({
     if (this.state.isEditing) {
       return (
         <textarea className="note"
-          style={{transform: this.state.matrix}}
+          style={{transform: this.state.matrix, '-webkit-transform': this.state.matrix}}
           onMouseDown={this.mouseDown}
           onMouseUp={this.mouseUp}
           onMouseMove={this.mouseMove}
@@ -95,7 +95,7 @@ var Note = React.createClass({
       var val = this.state.content;
       return (
         <div className="note"
-          style={{transform: this.state.matrix}}
+          style={{transform: this.state.matrix, '-webkit-transform': this.state.matrix}}
           onMouseDown={this.mouseDown}
           onMouseUp={this.mouseUp}
           dangerouslySetInnerHTML={{__html: marked(val, { sanitize: true })}}>

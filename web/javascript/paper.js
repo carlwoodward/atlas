@@ -111,7 +111,7 @@ var Paper = React.createClass({
           onMouseDown={this.mouseDown}
           onMouseUp={this.mouseUp}
           onMouseMove={this.mouseMove}
-          style={{transform: this.state.matrix}}>
+          style={{transform: this.state.matrix, '-webkit-transform': this.state.matrix}}>
           {
             this.state.notes.map(function(note) {
               return <Note className="note"
