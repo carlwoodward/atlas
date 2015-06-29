@@ -28,7 +28,21 @@
   };
 
   window.fetchNotes = function() {
-    return JSON.parse(localStorage.getItem(notesKey)) || [];
+    var notes = JSON.parse(localStorage.getItem(notesKey)) || [];
+    if (notes.length === 0 && notesKey === 'blank-notes') {
+      return [{
+        "matrix":"translate(5487px, 3211px)",
+        "id":0,
+        "key":0,
+        "isEditing":false,
+        "x":5487,
+        "y":3211,
+        "content":"# Atlas - Evernote + Google Maps\n\n- Click anywhere to add a new note\n- Click on a note to edit it\n- Enter __markdown__ text into a note\n- Click away or tab out to finish editing\n- Drag a note to move it\n- Create new boards using search",
+        "className":"note"
+      }];
+    } else {
+      return notes;
+    }
   };
 
   EventBus.addListener('create-note', function(note) {
