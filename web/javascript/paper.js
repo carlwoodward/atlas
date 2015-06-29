@@ -4,16 +4,17 @@ var Paper = React.createClass({
 
   componentDidMount: function() {
     EventBus.addListener('reload', this.reload);
-    EventBus.addListener('edit-note', this.beginEditing);
-    EventBus.addListener('update-note', this.endEditing);
-  },
-
-  beginEditing: function() {
-    this.isEditing = true;
-  },
-
-  endEditing: function() {
-    this.isEditing = false;
+    EventBus.addListener('reload-notes', this.reloadNotes);
+    marked.setOptions({
+      renderer: new marked.Renderer(),
+      gfm: true,
+      tables: true,
+      breaks: false,
+      pedantic: false,
+      sanitize: true,
+      smartLists: true,
+      smartypants: false
+    });
   },
 
   reload: function() {
@@ -32,6 +33,10 @@ var Paper = React.createClass({
 
     var notes = fetchNotes();
     return { notes: notes, matrix: matrix };
+  },
+
+  reloadNotes: function() {
+    this.setState({ notes: fetchNotes() });
   },
 
   mouseDown: function(event) {
@@ -88,6 +93,8 @@ var Paper = React.createClass({
       id: notesCount,
       key: notesCount,
       isEditing: true,
+      x: x,
+      y: y,
       content: ''
     };
     this.setState({ notes: this.state.notes.concat([attrs]) });
@@ -111,7 +118,7 @@ var Paper = React.createClass({
           onMouseDown={this.mouseDown}
           onMouseUp={this.mouseUp}
           onMouseMove={this.mouseMove}
-          style={{transform: this.state.matrix}}>
+          style={{transform: this.state.matrix, '-webkit-transform': this.state.matrix}}>
           {
             this.state.notes.map(function(note) {
               return <Note className="note"
@@ -119,6 +126,8 @@ var Paper = React.createClass({
                 id={note.id}
                 isEditing={note.isEditing}
                 matrix={note.matrix}
+                x={note.x}
+                y={note.y}
                 content={note.content}></Note>
             })
           }

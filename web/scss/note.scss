@@ -9,6 +9,20 @@
   }
 }
 
+div.note {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+
+  &.dragging {
+    padding: 50px;
+    margin: -50px 0 0 -50px;
+  }
+}
+
 textarea.note {
   background: rgba(248, 248, 248, 0.7);
   font-size: 16px;

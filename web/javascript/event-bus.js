@@ -15,13 +15,13 @@
     }
   };
 
-  var map = (window.location.hash || 'carlwoodward').replace('#', '');
+  var map = (window.location.hash || 'blank').replace('#', '');
   var notesKey = map + '-notes';
   storeMap(map);
 
   window.onhashchange = function(event) {
     event.preventDefault();
-    map = (window.location.hash || 'carlwoodward').replace('#', '');
+    map = (window.location.hash || 'blank').replace('#', '');
     notesKey = map + '-notes';
     storeMap(map);
     EventBus.emitEvent('reload');
@@ -35,6 +35,7 @@
     var notes = fetchNotes();
     notes.push(note);
     localStorage.setItem(notesKey, JSON.stringify(notes));
+    EventBus.emitEvent('reload-notes');
   });
 
   EventBus.addListener('update-note', function(changedNote) {
@@ -47,5 +48,14 @@
       }
     });
     localStorage.setItem(notesKey, JSON.stringify(notes));
+    EventBus.emitEvent('reload-notes');
+  });
+
+  EventBus.addListener('delete-note', function(id) {
+    var notes = fetchNotes().filter(function(note) {
+      return note.id !== id;
+    });
+    localStorage.setItem(notesKey, JSON.stringify(notes));
+    EventBus.emitEvent('reload-notes');
   });
 })();

@@ -1,74 +1,134 @@
 var Note = React.createClass({
   componentDidMount: function() {
-    EventBus.addListener('stop-editing-note', this.stopEditing);
-    EventBus.addListener('edit-note', this.stopEditingUnlessSelf);
+    this.attrs = this.props;
+    this.syntaxHighlight();
+    this.change();
+  },
+
+  componentDidUpdate: function() {
+    this.syntaxHighlight();
+    this.change();
   },
 
   getInitialState: function() {
     return {
-      isEditing: this.props.isEditing,
-      content: this.props.content,
-      matrix: this.props.matrix,
-      id: this.props.id
+      cssClass: 'note'
     };
+  },
+
+  setAttrs: function(updatedAttrs) {
+    Object.keys(updatedAttrs).forEach(function(key) {
+      this.attrs[key] = updatedAttrs[key];
+    }.bind(this));
   },
 
   mouseDown: function(event) {
     event.stopPropagation();
-    this.setState({ isEditing: true });
-    this.change();
-    EventBus.emitEvent('edit-note', [this.state.id]);
+    this.isDragging = true;
+    this.hasDragged = false;
+    this.clickX = event.pageX;
+    this.clickY = event.pageY;
+    this.updateCssState();
   },
 
   mouseUp: function(event) {
     event.stopPropagation();
-  },
-
-  stopEditing: function() {
-    if (this.state.isEditing === true) {
-      this.blur();
+    this.isDragging = false;
+    this.updateCssState();
+    if (!this.hasDragged) {
+      this.setAttrs({ isEditing: true });
+      EventBus.emitEvent('update-note', [this.attrs]);
+      this.change();
     }
   },
 
-  stopEditingUnlessSelf: function(id) {
-    if (this.state.id !== id) {
-      this.stopEditing();
+  mouseMove: function(event) {
+    event.stopPropagation();
+    if (this.isDragging) {
+      this.hasDragged = true;
+
+      var dx = this.clickX - event.pageX;
+      var dy = this.clickY - event.pageY;
+
+      this.setAttrs({ x: this.props.x - dx, y: this.props.y - dy });
+
+      this.updateMatrixState();
+
+      this.clickX = event.pageX;
+      this.clickY = event.pageY;
+      this.updateCssState();
     }
+  },
+
+  syntaxHighlight: function() {
+    var blocks = this.getDOMNode().querySelectorAll('pre code');
+    for (var index = 0; index < blocks.length; index++) {
+      var block = blocks[index];
+      hljs.highlightBlock(block);
+    };
+  },
+
+  updateCssState: function() {
+    if (this.isDragging) {
+      this.setState({ cssClass: 'note dragging' });
+    } else {
+      this.setState({ cssClass: 'note' });
+    }
+  },
+
+  updateMatrixState: function() {
+    var matrix = 'translate(' +
+        this.attrs.x.toFixed() + 'px, ' +
+        this.attrs.y.toFixed()  + 'px)';
+    this.setAttrs({ matrix: matrix });
+    EventBus.emitEvent('update-note', [this.attrs]);
   },
 
   blur: function() {
     var content = this.getDOMNode().value;
-    var attrs = { isEditing: false, content: content };
-    this.setState(attrs);
-    var currentState = this.state;
-    for (var key in attrs) { currentState[key] = attrs[key]; }
-    EventBus.emitEvent('update-note', [currentState]);
+    if (content === '') {
+      EventBus.emitEvent('delete-note', [this.props.id]);
+    } else {
+      var attrs = { isEditing: false, content: content };
+      this.setAttrs(attrs);
+      EventBus.emitEvent('update-note', [this.attrs]);
+    }
   },
 
   change: function() {
-    var node = this.getDOMNode();
-    node.style.height = 'auto';
-    node.style.height = node.scrollHeight + 'px';
+    if (this.attrs.isEditing) {
+      var node = this.getDOMNode();
+      node.style.height = 'auto';
+      node.style.height = node.scrollHeight + 'px';
+    }
+  },
+
+  keyUp: function(event) {
+    if (event.keyCode === 27) {
+      this.blur();
+    }
   },
 
   render: function() {
-    if (this.state.isEditing) {
+    if (this.props.isEditing) {
       return (
         <textarea className="note"
-          style={{transform: this.props.matrix}}
+          style={{transform: this.props.matrix, '-webkit-transform': this.props.matrix}}
           onMouseDown={this.mouseDown}
           onMouseUp={this.mouseUp}
           onBlur={this.blur}
-          onChange={this.change}>
-          {this.state.content}
+          onChange={this.change}
+          onKeyUp={this.keyUp}>
+          {this.props.content}
         </textarea>
       );
     } else {
-      var val = this.state.content;
+      var val = this.props.content;
       return (
-        <div className="note"
-          style={{transform: this.props.matrix}}
+        <div className={this.state.cssClass}
+          style={{transform: this.props.matrix, '-webkit-transform': this.props.matrix}}
           onMouseDown={this.mouseDown}
+          onMouseMove={this.mouseMove}
           onMouseUp={this.mouseUp}
           dangerouslySetInnerHTML={{__html: marked(val, { sanitize: true })}}>
         </div>
