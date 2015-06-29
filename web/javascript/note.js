@@ -2,10 +2,12 @@ var Note = React.createClass({
   componentDidMount: function() {
     this.attrs = this.props;
     this.syntaxHighlight();
+    this.change();
   },
 
   componentDidUpdate: function() {
     this.syntaxHighlight();
+    this.change();
   },
 
   getInitialState: function() {
@@ -94,9 +96,11 @@ var Note = React.createClass({
   },
 
   change: function() {
-    var node = this.getDOMNode();
-    node.style.height = 'auto';
-    node.style.height = node.scrollHeight + 'px';
+    if (this.attrs.isEditing) {
+      var node = this.getDOMNode();
+      node.style.height = 'auto';
+      node.style.height = node.scrollHeight + 'px';
+    }
   },
 
   keyUp: function(event) {
