@@ -3,6 +3,12 @@ var Note = React.createClass({
     this.attrs = this.props;
   },
 
+  getInitialState: function() {
+    return {
+      cssClass: 'note'
+    };
+  },
+
   setAttrs: function(updatedAttrs) {
     Object.keys(updatedAttrs).forEach(function(key) {
       this.attrs[key] = updatedAttrs[key];
@@ -15,11 +21,13 @@ var Note = React.createClass({
     this.hasDragged = false;
     this.clickX = event.pageX;
     this.clickY = event.pageY;
+    this.updateCssState();
   },
 
   mouseUp: function(event) {
     event.stopPropagation();
     this.isDragging = false;
+    this.updateCssState();
     if (!this.hasDragged) {
       this.setAttrs({ isEditing: true });
       EventBus.emitEvent('update-note', [this.attrs]);
@@ -41,6 +49,15 @@ var Note = React.createClass({
 
       this.clickX = event.pageX;
       this.clickY = event.pageY;
+      this.updateCssState();
+    }
+  },
+
+  updateCssState: function() {
+    if (this.isDragging) {
+      this.setState({ cssClass: 'note dragging' });
+    } else {
+      this.setState({ cssClass: 'note' });
     }
   },
 
@@ -91,7 +108,7 @@ var Note = React.createClass({
     } else {
       var val = this.props.content;
       return (
-        <div className="note"
+        <div className={this.state.cssClass}
           style={{transform: this.props.matrix, '-webkit-transform': this.props.matrix}}
           onMouseDown={this.mouseDown}
           onMouseMove={this.mouseMove}
