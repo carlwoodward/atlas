@@ -37,7 +37,7 @@
         "isEditing":false,
         "x":5487,
         "y":3211,
-        "content":"# Atlas - Evernote + Google Maps\n\n- Click anywhere to add a new note\n- Click on a note to edit it\n- Enter __markdown__ text into a note\n- Click away or tab out to finish editing\n- Drag a note to move it\n- Create new boards using search\n- To delete a note remove its content",
+        "content":"# Atlas - Evernote + Google Maps\n\n- Click anywhere to add a new note\n- Click on a note to edit it\n- Enter __markdown__ text into a note\n- Click away or tab out to finish editing\n- Drag a note to move it\n- Create new boards using search\n- To remove a note delete its content",
         "className":"note"
       }];
     } else {
