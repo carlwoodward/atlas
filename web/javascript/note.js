@@ -36,6 +36,8 @@ var Note = React.createClass({
     this.isDragging = false;
     this.updateCssState();
     if (!this.hasDragged) {
+      EventBus.emitEvent('stop-editing-note');
+
       this.setAttrs({ isEditing: true });
       EventBus.emitEvent('update-note', [this.attrs]);
       this.change();

@@ -72,4 +72,13 @@
     localStorage.setItem(notesKey, JSON.stringify(notes));
     EventBus.emitEvent('reload-notes');
   });
+
+  EventBus.addListener('stop-editing-note', function(id) {
+    var notes = fetchNotes().map(function(note) {
+      note.isEditing = false;
+      return note;
+    });
+    localStorage.setItem(notesKey, JSON.stringify(notes));
+    EventBus.emitEvent('reload-notes');
+  });
 })();

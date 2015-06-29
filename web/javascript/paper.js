@@ -49,11 +49,14 @@ var Paper = React.createClass({
   mouseUp: function(event) {
     this.isDragging = false;
     // click rather then drag
-    if (this.hasDragged !== true && this.isEditing !== true) {
+    var isEditing = this.state.notes.filter(function(note) {
+      return note.isEditing === true;
+    }).length > 0;
+    if (this.hasDragged !== true && isEditing !== true) {
       var differenceToOne = Math.abs(1 - this.zoom);
       this.insertNote((event.clientX / this.zoom) + Math.abs(this.paperX),
                       (event.clientY / this.zoom) + Math.abs(this.paperY));
-    } else if (this.isEditing === true) {
+    } else if (isEditing === true) {
       EventBus.emitEvent('stop-editing-note');
     }
   },
