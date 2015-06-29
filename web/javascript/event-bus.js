@@ -15,13 +15,13 @@
     }
   };
 
-  var map = (window.location.hash || 'carlwoodward').replace('#', '');
+  var map = (window.location.hash || 'blank').replace('#', '');
   var notesKey = map + '-notes';
   storeMap(map);
 
   window.onhashchange = function(event) {
     event.preventDefault();
-    map = (window.location.hash || 'carlwoodward').replace('#', '');
+    map = (window.location.hash || 'blank').replace('#', '');
     notesKey = map + '-notes';
     storeMap(map);
     EventBus.emitEvent('reload');

@@ -5,6 +5,16 @@ var Paper = React.createClass({
   componentDidMount: function() {
     EventBus.addListener('reload', this.reload);
     EventBus.addListener('reload-notes', this.reloadNotes);
+    marked.setOptions({
+      renderer: new marked.Renderer(),
+      gfm: true,
+      tables: true,
+      breaks: false,
+      pedantic: false,
+      sanitize: true,
+      smartLists: true,
+      smartypants: false
+    });
   },
 
   reload: function() {

@@ -1,6 +1,11 @@
 var Note = React.createClass({
   componentDidMount: function() {
     this.attrs = this.props;
+    this.syntaxHighlight();
+  },
+
+  componentDidUpdate: function() {
+    this.syntaxHighlight();
   },
 
   getInitialState: function() {
@@ -51,6 +56,14 @@ var Note = React.createClass({
       this.clickY = event.pageY;
       this.updateCssState();
     }
+  },
+
+  syntaxHighlight: function() {
+    var blocks = this.getDOMNode().querySelectorAll('pre code');
+    for (var index = 0; index < blocks.length; index++) {
+      var block = blocks[index];
+      hljs.highlightBlock(block);
+    };
   },
 
   updateCssState: function() {
