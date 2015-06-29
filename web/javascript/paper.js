@@ -4,7 +4,7 @@ var Paper = React.createClass({
 
   componentDidMount: function() {
     EventBus.addListener('reload', this.reload);
-    EventBus.addListener('delete-note', this.deleteNote);
+    EventBus.addListener('reload-notes', this.reloadNotes);
   },
 
   reload: function() {
@@ -25,11 +25,8 @@ var Paper = React.createClass({
     return { notes: notes, matrix: matrix };
   },
 
-  deleteNote: function(id) {
-    var notes = fetchNotes().filter(function(note) {
-      return note.id !== id;
-    });
-    this.setState({ notes: notes });
+  reloadNotes: function() {
+    this.setState({ notes: fetchNotes() });
   },
 
   mouseDown: function(event) {

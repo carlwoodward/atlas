@@ -35,6 +35,7 @@
     var notes = fetchNotes();
     notes.push(note);
     localStorage.setItem(notesKey, JSON.stringify(notes));
+    EventBus.emitEvent('reload-notes');
   });
 
   EventBus.addListener('update-note', function(changedNote) {
@@ -47,6 +48,7 @@
       }
     });
     localStorage.setItem(notesKey, JSON.stringify(notes));
+    EventBus.emitEvent('reload-notes');
   });
 
   EventBus.addListener('delete-note', function(id) {
@@ -54,5 +56,6 @@
       return note.id !== id;
     });
     localStorage.setItem(notesKey, JSON.stringify(notes));
+    EventBus.emitEvent('reload-notes');
   });
 })();

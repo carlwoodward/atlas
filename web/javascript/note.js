@@ -1,16 +1,12 @@
 var Note = React.createClass({
   componentDidMount: function() {
+    this.attrs = this.props;
   },
 
-  getInitialState: function() {
-    return {
-      isEditing: this.props.isEditing,
-      content: this.props.content,
-      matrix: this.props.matrix,
-      x: this.props.x,
-      y: this.props.y,
-      id: this.props.id
-    };
+  setAttrs: function(updatedAttrs) {
+    Object.keys(updatedAttrs).forEach(function(key) {
+      this.attrs[key] = updatedAttrs[key];
+    }.bind(this));
   },
 
   mouseDown: function(event) {
@@ -24,19 +20,22 @@ var Note = React.createClass({
   mouseUp: function(event) {
     event.stopPropagation();
     this.isDragging = false;
-    this.setState({ isEditing: true });
-    EventBus.emitEvent('edit-note', [this.state.id]);
-    this.change();
+    if (!this.hasDragged) {
+      this.setAttrs({ isEditing: true });
+      EventBus.emitEvent('update-note', [this.attrs]);
+      this.change();
+    }
   },
 
   mouseMove: function(event) {
+    event.stopPropagation();
     if (this.isDragging) {
       this.hasDragged = true;
 
       var dx = this.clickX - event.pageX;
       var dy = this.clickY - event.pageY;
 
-      this.setState({ x: this.state.x - dx, y: this.state.y - dy });
+      this.setAttrs({ x: this.props.x - dx, y: this.props.y - dy });
 
       this.updateMatrixState();
 
@@ -47,21 +46,20 @@ var Note = React.createClass({
 
   updateMatrixState: function() {
     var matrix = 'translate(' +
-        this.state.x.toFixed() + 'px, ' +
-        this.state.y.toFixed()  + 'px)';
-    this.setState({ matrix: matrix });
+        this.attrs.x.toFixed() + 'px, ' +
+        this.attrs.y.toFixed()  + 'px)';
+    this.setAttrs({ matrix: matrix });
+    EventBus.emitEvent('update-note', [this.attrs]);
   },
 
   blur: function() {
     var content = this.getDOMNode().value;
     if (content === '') {
-      EventBus.emitEvent('delete-note', [this.state.id]);
+      EventBus.emitEvent('delete-note', [this.props.id]);
     } else {
       var attrs = { isEditing: false, content: content };
-      this.setState(attrs);
-      var currentState = this.state;
-      for (var key in attrs) { currentState[key] = attrs[key]; }
-      EventBus.emitEvent('update-note', [currentState]);
+      this.setAttrs(attrs);
+      EventBus.emitEvent('update-note', [this.attrs]);
     }
   },
 
@@ -78,25 +76,25 @@ var Note = React.createClass({
   },
 
   render: function() {
-    if (this.state.isEditing) {
+    if (this.props.isEditing) {
       return (
         <textarea className="note"
-          style={{transform: this.state.matrix, '-webkit-transform': this.state.matrix}}
+          style={{transform: this.props.matrix, '-webkit-transform': this.props.matrix}}
           onMouseDown={this.mouseDown}
           onMouseUp={this.mouseUp}
-          onMouseMove={this.mouseMove}
           onBlur={this.blur}
           onChange={this.change}
           onKeyUp={this.keyUp}>
-          {this.state.content}
+          {this.props.content}
         </textarea>
       );
     } else {
-      var val = this.state.content;
+      var val = this.props.content;
       return (
         <div className="note"
-          style={{transform: this.state.matrix, '-webkit-transform': this.state.matrix}}
+          style={{transform: this.props.matrix, '-webkit-transform': this.props.matrix}}
           onMouseDown={this.mouseDown}
+          onMouseMove={this.mouseMove}
           onMouseUp={this.mouseUp}
           dangerouslySetInnerHTML={{__html: marked(val, { sanitize: true })}}>
         </div>
